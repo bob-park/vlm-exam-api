@@ -1,0 +1,15 @@
+fastapi==0.110.0
+uvicorn[standard]==0.27.1
+pydantic-settings==2.2.1
+sqlalchemy==2.0.27
+asyncpg==0.29.0
+greenlet==3.0.3
+pgvector==0.2.5
+python-multipart==0.0.9
+Pillow==10.2.0
+numpy==1.26.4
+torch==2.2.1
+# OpenAI CLIP
+clip @ git+https://github.com/openai/CLIP.git
+insightface==0.7.3
+onnxruntime==1.17.1
