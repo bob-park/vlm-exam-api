@@ -33,6 +33,21 @@ setup_logging()
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title=settings.app_name)
+_CATALOG_PREFIX = "catalog_"
+
+
+def _catalog_seconds_from_path(path_str: str) -> float | None:
+    path = Path(path_str)
+    stem = path.stem
+    if not stem.startswith(_CATALOG_PREFIX):
+        return None
+    idx_str = stem[len(_CATALOG_PREFIX) :]
+    if not idx_str.isdigit():
+        return None
+    idx = int(idx_str)
+    if idx <= 0:
+        return None
+    return float(idx - 1)
 
 
 @app.on_event("startup")
@@ -181,6 +196,7 @@ async def search_by_text(
             CatalogImage.id.label("catalog_image_id"),
             CatalogImage.video_id.label("video_id"),
             CatalogImage.caption_ko.label("caption_ko"),
+            CatalogImage.path.label("path"),
             (literal(1.0) - distance).label("score"),
         )
         .where(CatalogImage.clip_image_embedding.is_not(None))
@@ -195,6 +211,7 @@ async def search_by_text(
             video_id=row.video_id,
             caption_ko=row.caption_ko,
             score=float(row.score),
+            seconds=_catalog_seconds_from_path(row.path),
         )
         for row in result.all()
     ]
@@ -230,6 +247,7 @@ async def search_by_face(
                 FaceEmbedding.catalog_image_id.label("catalog_image_id"),
                 CatalogImage.video_id.label("video_id"),
                 CatalogImage.caption_ko.label("caption_ko"),
+                CatalogImage.path.label("path"),
                 (literal(1.0) - distance).label("score"),
             )
             .join(CatalogImage, CatalogImage.id == FaceEmbedding.catalog_image_id)
@@ -247,6 +265,7 @@ async def search_by_face(
             video_id=row.video_id,
             caption_ko=row.caption_ko,
             score=float(row.score),
+            seconds=_catalog_seconds_from_path(row.path),
         )
         for row in result.all()
     ]

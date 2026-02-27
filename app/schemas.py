@@ -36,6 +36,7 @@ class SearchResult(BaseModel):
     video_id: int
     caption_ko: Optional[str]
     score: float
+    seconds: Optional[float] = None
 
 
 class VideoSearchResponse(BaseModel):
