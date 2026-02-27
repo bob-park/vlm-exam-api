@@ -178,7 +178,10 @@ async def get_thumbnail(
     path = Path(catalog.path)
     if not path.exists():
         raise HTTPException(status_code=404, detail="Thumbnail missing")
-    return FileResponse(path, media_type="image/webp")
+    media_type = "image/png"
+    if path.suffix.lower() in {".jpg", ".jpeg"}:
+        media_type = "image/jpeg"
+    return FileResponse(path, media_type=media_type)
 
 
 @app.post("/search/text", response_model=TextSearchResponse)

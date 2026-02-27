@@ -91,9 +91,7 @@ def extract_catalog_image(
         scale_filter = "scale=iw:ih"
 
     attempts = [
-        output_path,
         output_path.with_suffix(".png"),
-        output_path.with_suffix(".jpg"),
     ]
     last_error: Exception | None = None
     for candidate in attempts:
@@ -152,9 +150,7 @@ def extract_catalog_images(
         scale_filter = "scale=iw:ih"
 
     output_patterns = [
-        output_dir / "catalog_%05d.webp",
         output_dir / "catalog_%05d.png",
-        output_dir / "catalog_%05d.jpg",
     ]
     last_error: Exception | None = None
     used_pattern: Path | None = None
